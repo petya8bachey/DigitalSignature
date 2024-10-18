@@ -1,3 +1,8 @@
+/**
+ * ЭЦП на MD5 и RSA
+ * @version 1.0
+ * @author petya8bachey
+ */
 public class DigitalSignature {
     private final RSA rsa = new RSA(1024); // Класс RSA для управления ключами
     private final MD5 md5 = new MD5();

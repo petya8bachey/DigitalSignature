@@ -45,10 +45,9 @@ public class MD5 {
      * @param M Входной блок данных, разбитый на 16 слов по 32 бита.
      */
     private void mainLoop(int[] M) {
-        int a = A, b = B, c = C, d = D; // Копируем значения начальных переменных A, B, C и D
+        int a = A, b = B, c = C, d = D;
         for (int i = 0; i < 64; i++) {
             int F, g;
-            // Определяем функцию F и индекс g в зависимости от текущего шага
             if (i < 16) {
                 F = (b & c) | ((~b) & d);
                 g = i;
@@ -62,14 +61,12 @@ public class MD5 {
                 F = c ^ (b | (~d));
                 g = (7 * i) % 16;
             }
-            // Основные вычисления и циклический сдвиг
             int temp = d;
             d = c;
             c = b;
             b += shift(a + F + K[i] + M[g], S[i]);
             a = temp;
         }
-        // Добавляем результаты в исходные переменные A, B, C и D
         A += a;
         B += b;
         C += c;
@@ -82,16 +79,13 @@ public class MD5 {
      * @return Массив слов, содержащий исходное сообщение с добавленными битами.
      */
     private int[] addPadding(String str) {
-        int numBlocks = ((str.length() + 8) / 64) + 1; // Количество блоков для хранения сообщения
-        int[] paddedMessage = new int[numBlocks * 16]; // Массив для хранения блоков данных
+        int numBlocks = ((str.length() + 8) / 64) + 1;
+        int[] paddedMessage = new int[numBlocks * 16];
         int i;
-        // Записываем исходное сообщение в массив, побайтно
         for (i = 0; i < str.length(); i++) {
             paddedMessage[i >> 2] |= str.charAt(i) << ((i % 4) * 8);
         }
-        // Добавляем 1 бит (0x80) после сообщения
         paddedMessage[i >> 2] |= 0x80 << ((i % 4) * 8);
-        // В конце добавляем длину сообщения в битах
         paddedMessage[paddedMessage.length - 2] = str.length() * 8;
         return paddedMessage;
     }
@@ -103,20 +97,16 @@ public class MD5 {
      * @return Хеш в виде шестнадцатеричной строки.
      */
     public String getMD5(String source) {
-        // Инициализация переменных A, B, C и D стандартными значениями
         A = 0x67452301;
         B = 0xefcdab89;
         C = 0x98badcfe;
         D = 0x10325476;
-        // Добавление padding к строке
         int[] paddedMessage = addPadding(source);
-        // Разбиваем сообщение на блоки по 512 бит (16 слов по 32 бита) и обрабатываем их
         for (int i = 0; i < paddedMessage.length / 16; i++) {
             int[] block = new int[16];
             System.arraycopy(paddedMessage, i * 16, block, 0, 16);
-            mainLoop(block); // Основная обработка каждого блока
+            mainLoop(block);
         }
-        // Возвращаем итоговый хеш в виде шестнадцатеричной строки
         return toHexString(A) + toHexString(B) + toHexString(C) + toHexString(D);
     }
 
@@ -127,7 +117,6 @@ public class MD5 {
      */
     private String toHexString(int value) {
         StringBuilder hexString = new StringBuilder(8);
-        // Преобразуем каждый байт числа в шестнадцатеричный формат
         for (int i = 0; i < 4; i++) {
             hexString.append(String.format("%02x", (value >>> (i * 8)) & 0xff));
         }
