@@ -13,7 +13,7 @@ public class DigitalSignature {
      */
     public byte[] signMessage(String message) {
         String messageHash = md5.getMD5(message);
-        return rsa.encrypt(messageHash.getBytes());
+        return rsa.decrypt(messageHash.getBytes());
     }
 
     /**
@@ -25,7 +25,7 @@ public class DigitalSignature {
     public boolean verifySignature(String message, byte[] signature) {
         MD5 md5 = new MD5();
         String messageHash = md5.getMD5(message);
-        byte[] decryptedHash = rsa.decrypt(signature);
+        byte[] decryptedHash = rsa.encrypt(signature);
         return messageHash.equals(new String(decryptedHash));
     }
 }
